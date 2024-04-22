@@ -48,9 +48,6 @@ services:
     image: mysql:8
     volumes:
       - db_data:/var/lib/mysql
-      - type: bind
-        source: "./my.cnf"
-        target: "/etc/mysql/conf.d/my.cnf"
     ports:
       - target: 3306
         published: ${DB_PUBLISHED_PORT:-3306}
