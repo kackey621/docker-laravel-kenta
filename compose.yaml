@@ -1,10 +1,5 @@
 volumes:
-  db_data:
   psysh-store:
-
-configs:
-  db-config:
-    file: ./infra/docker/mysql/my.cnf
 
 services:
   app:
@@ -45,23 +40,17 @@ services:
         target: /workspace
 
   db:
-    image: mysql:8
-    volumes:
-      - db_data:/var/lib/mysql
-    ports:
-      - target: 3306
-        published: ${DB_PUBLISHED_PORT:-3306}
-        protocol: tcp
-        mode: host
-    environment:
-      - MYSQL_DATABASE=${DB_DATABASE:-laravel}
-      - MYSQL_USER=${DB_USERNAME:-phper}
-      - MYSQL_PASSWORD=${DB_PASSWORD:-secret}
-      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD:-secret}
-    command: >
-      bash -c "mkdir -p /var/log/mysql
-      && chown -hR mysql:mysql /var/log/mysql
-      && /entrypoint.sh mysqld"
+      image: mysql:8.0.28
+      ports:
+        - "3306:3306"
+      environment:
+        MYSQL_ROOT_PASSWORD: root
+        MYSQL_DATABASE: laravel
+        MYSQL_USER: phper
+        MYSQL_PASSWORD: secret
+        TZ: "Asia/Tokyo"
+      volumes:
+        - ./my.cnf:/etc/mysql/conf.d/my.cnf
 
   mailpit:
     image: axllent/mailpit
